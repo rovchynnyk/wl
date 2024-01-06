@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { PaintBrushIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
+import { HeartIcon as HeartIconOutlined } from '@heroicons/vue/24/outline';
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <PaintBrushIcon class="icon" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
+    <HeartIconOutlined class="icon" />
+    <!-- <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-    </div>
+    </div> -->
   </header>
 
   <RouterView />
@@ -22,13 +22,20 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+  height: 64px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  border-bottom: 2px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.icon {
+  width: 36px;
 }
 
 nav {
