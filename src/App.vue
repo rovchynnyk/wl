@@ -16,7 +16,9 @@ import { PaintBrushIcon, HeartIcon } from '@heroicons/vue/24/solid'
     </nav>
   </header>
 
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>
@@ -54,5 +56,9 @@ nav {
   flex: 1;
   align-items: center;
   justify-content: space-between;
+}
+
+main {
+  padding-top: 80px;
 }
 </style>

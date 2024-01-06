@@ -14,7 +14,5 @@ export const makeHttpRequest = async ({ url, method = 'GET' }: MakeHttpRequestT)
 
   const json = await response.json();
 
-  console.log(55, json)
-
   return json;
 };

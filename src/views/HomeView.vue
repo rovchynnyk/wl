@@ -3,9 +3,10 @@
 // import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router'
 import { makeHttpRequest, API_ROOT, API_KEY } from '@/utils/httpUtils';
-import { debounce } from '../utils/debounce';
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 // import { ModalContainer } from '@/components/ModalContainer'
 import ModalContainer from '@/components/ModalContainer.vue'
+import Button from '@/components/ButtonVariant.vue';
 
 import { ref } from 'vue';
 
@@ -13,38 +14,51 @@ const data = ref(null)
 
 const selected = ref(0);
 
+const search = defineModel();
+
 const showModal = ref(false);
 
-const handleInput = debounce(async (ev: Event) => {
-  const maker = (ev.target as HTMLInputElement).value;
-
+const handleSubmit = async () => {
   data.value = await makeHttpRequest({ 
-    url: `${API_ROOT}/collection?key=${API_KEY}&involvedMaker=Rembrandt+van+Rijn`,
+    url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&q=${search.value}&imgonly=true`,
   });
-}, 500);
+}
 
-const handleModalShow = (id: number) => {
+const handleModalShow = () => {
   showModal.value = !showModal.value;
-  selected.value = id;
+};
+
+const fetch = async () => {
+  const res = await makeHttpRequest({ 
+    url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&q=lll&imgonly=true`,
+  });
 };
 
 console.log(data)
 </script>
 
 <template>
-  <main>
-    <!-- <TheWelcome /> -->
-    <input class="search" type="search" @input="handleInput"/>
+  <div>
+    <form @submit.prevent="handleSubmit">
+      <input class="search" type="text" v-model="search" placeholder="Search for a piece of art" />
+
+      <Button type="submit">Search</Button>
+    </form>
 
     <div class="container">
       <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow(el.id)">
-        <img :src="el.headerImage.url" />
+      <!-- <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow(el.id)"> -->
+        <img :src="el.webImage.url" />
       </div>
+
+      <button @click="fetch">Load More</button>
     </div>
 
     <div class="overlay" v-show="showModal">
       <div class="modal" @click="handleModalShow">
-        <span>&times;</span>
+        <button @click="handleModalShow" class="close-btn">
+          <XMarkIcon />
+        </button>
 
         <footer class="actions">
           <button class="button">Add To Favourites</button>
@@ -55,14 +69,10 @@ console.log(data)
     <!-- <ModalContainer v-show="showModal">
       hello modal
     </ModalContainer> -->
-  </main>
+  </div>
 </template>
 
 <style scoped>
-main {
-  padding-top: 80px;
-}
-
 .container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -86,8 +96,6 @@ main {
 
   &:hover,
   &:focus {
-    opacity: 0.5;
-
     &::after {
       transform: translateY(0%);
     }
@@ -98,8 +106,7 @@ main {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: black;
-    opacity: 0.75;
+    background-color: rgba(0,0,0,0.5);
     color: white;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -120,18 +127,28 @@ img {
   object-position: center;
 }
 
+form {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
 .search { 
   display: block;
-  margin: 0 auto 24px;
-  padding: 8px 16px;
+  padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
+  width: 600px;
+  font-size: 16px;
 }
 
 .modal {
   background-color: white;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
-  width: 80%;
+  width: 600px;
 }
 
 .overlay {
@@ -152,6 +169,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  gap: 20px;
 }
 
 .button {
@@ -164,12 +182,24 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
   line-height: 1;
 
   &:hover,
   &:focus {
     background-color: #4338ca; /* hover:bg-indigo-700 */
+  }
+}
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border: none;
+  background-color: #fff;
+  margin-bottom: 20px;
+
+  & > svg {
+    width: 24px;
   }
 }
 
@@ -179,9 +209,7 @@ img {
   }
 
   .button {
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
+    flex: 1;
   }
 }
 </style>
