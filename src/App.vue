@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { PaintBrushIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
-import { HeartIcon as HeartIconOutlined } from '@heroicons/vue/24/outline';
+import { PaintBrushIcon, HeartIcon } from '@heroicons/vue/24/solid'
 </script>
 
 <template>
   <header>
-    <PaintBrushIcon class="icon" />
+    <nav>
+      <RouterLink to="/">
+        <PaintBrushIcon />
+      </RouterLink>
 
-    <HeartIconOutlined class="icon" />
-    <!-- <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div> -->
+      <RouterLink to="/favourites">
+        <HeartIcon />
+      </RouterLink>
+    </nav>
   </header>
 
   <RouterView />
@@ -31,62 +30,29 @@ header {
   border-bottom: 2px solid #ccc;
   display: flex;
   justify-content: space-between;
-  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  place-items: center;
 }
 
-.icon {
+a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 36px;
 }
 
+svg {
+  fill: black;
+  stroke: black;
+}
+
 nav {
-  width: 100%;
   font-size: 12px;
   text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

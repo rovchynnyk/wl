@@ -11,6 +11,8 @@ import { ref } from 'vue';
 
 const data = ref(null)
 
+const selected = ref(0);
+
 const showModal = ref(false);
 
 const handleInput = debounce(async (ev: Event) => {
@@ -21,9 +23,12 @@ const handleInput = debounce(async (ev: Event) => {
   });
 }, 500);
 
-const handleModalShow = () => {
+const handleModalShow = (id: number) => {
   showModal.value = !showModal.value;
+  selected.value = id;
 };
+
+console.log(data)
 </script>
 
 <template>
@@ -32,7 +37,7 @@ const handleModalShow = () => {
     <input class="search" type="search" @input="handleInput"/>
 
     <div class="container">
-      <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow">
+      <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow(el.id)">
         <img :src="el.headerImage.url" />
       </div>
     </div>
@@ -41,8 +46,10 @@ const handleModalShow = () => {
       <div class="modal" @click="handleModalShow">
         <span>&times;</span>
 
-        <button>Add To Favourites</button>
-        <RouterLink to="/">View details</RouterLink>
+        <footer class="actions">
+          <button class="button">Add To Favourites</button>
+          <RouterLink to="/" class="button">View details</RouterLink>
+        </footer>
       </div>
     </div>
     <!-- <ModalContainer v-show="showModal">
@@ -139,5 +146,42 @@ img {
   display: flex;
   align-items: self-end;
   justify-content: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.button {
+  border-radius: 8px;
+  padding: 12px 24px;
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  line-height: 1;
+
+  &:hover,
+  &:focus {
+    background-color: #4338ca; /* hover:bg-indigo-700 */
+  }
+}
+
+@media (min-width: 640px) {
+  .actions {
+    flex-direction: row;
+  }
+
+  .button {
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
 }
 </style>
