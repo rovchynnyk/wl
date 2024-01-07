@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { store } from '@/utils/store';
-import { onMounted } from 'vue';
+import { capitalize, onMounted } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
 import { makeHttpRequest, API_KEY, API_ROOT } from '@/utils/httpUtils';
 import Button from '@/components/ButtonVariant.vue';
@@ -47,6 +47,25 @@ const addToFavourites = () => {
 
         <p>{{ data.plaqueDescriptionEnglish }}</p>
 
+        <ul v-if="data.objectCollection">
+          <li 
+            v-for="collection in data.objectCollection" 
+            :key="collection"
+            class="chip"
+          >
+            {{capitalize(collection)}}
+          </li>
+        </ul>
+
+        <ul class="colors" v-if="data.colors">
+          <li 
+            v-for="({ hex }, index) in data.colors" 
+            :key="index" 
+            :style="{ backgroundColor: hex }" 
+            class="color-box" 
+          />
+        </ul>
+
         <Button 
           type="button" 
           @click="addToFavourites()"
@@ -64,10 +83,20 @@ p {
   margin-bottom: 20px;
 }
 
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
+ul {
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+li {
+  display: inline-block;
+  list-style-type: none;
+  border-radius: 12px;
+  padding: 4px 16px;
+
+  &:not(:last-of-type) {
+    margin-right: 8px;
+  }
 }
 
 img {
@@ -77,8 +106,23 @@ img {
   object-position: center;
 }
 
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 28px;
+}
+
 .button {
   display: inline-flex;
   margin-bottom: 24px;
+}
+
+.chip {
+  background-color: #eef2ff;
+}
+
+.color-box {
+  width: 32px;
+  height: 32px;
 }
 </style>

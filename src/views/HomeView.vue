@@ -115,7 +115,8 @@ const shouldLoadMore = computed(() => {
           >
             View details
           </RouterLink> -->
-          <Button variant="link" :url="selected">View details</Button>
+          <Button variant="link" :url="{ name: 'details', params: { id: selected } }">View details</Button>
+          <!-- <Button variant="link" :url="selected">View details</Button> -->
           <!-- <RouterLink :to="selected" custom v-slot="{navigate}">
             <Button @click="navigate" role="link">View details</Button>
           </RouterLink> -->

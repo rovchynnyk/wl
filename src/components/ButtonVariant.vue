@@ -4,7 +4,12 @@ import { RouterLink } from 'vue-router';
 
 const { variant } = defineProps<{ 
   variant: 'link' | 'button' | 'submit'
-  url?: string,
+  url?: string | { 
+    name: string, 
+    params: { 
+      [key: string]: string,
+    } 
+  },
 }>();
 
 const componentType = computed(() => {
@@ -38,7 +43,7 @@ const componentType = computed(() => {
 
   &:hover,
   &:focus {
-    background-color: #4338ca; /* hover:bg-indigo-700 */
+    background-color: #4338ca;
   }
 }
 </style>
