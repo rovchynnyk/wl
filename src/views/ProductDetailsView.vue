@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, RouterLink } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { capitalize, computed } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
@@ -8,6 +8,7 @@ import { setFavourites, getFavourite } from '@/utils/localstorage';
 import Button from '@/components/ButtonVariant.vue';
 
 const { params: { id } } = useRoute();
+const router = useRouter();
 
 const { data, isPending } = useQuery({ 
   queryKey: ['art_object', id], 
@@ -28,6 +29,10 @@ const addToFavourites = () => {
 const stored = computed(() => {
   return getFavourite(id as string);
 });
+
+const goBack = () => {
+  router.go(-1);
+};
 </script>
 
 <template>
@@ -36,7 +41,14 @@ const stored = computed(() => {
   </div>
 
   <div v-else>
-    <RouterLink class="action-button button" to="/">Back</RouterLink>
+    <Button 
+      type="button" 
+      class="button"
+      aria-label="Go back to previous page"
+      @click="goBack" 
+    >
+      Go Back
+    </button>
 
     <div class="container">
       <img :src="data.webImage.url" :alt="data.title" />

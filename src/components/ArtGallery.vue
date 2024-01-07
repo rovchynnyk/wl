@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { XMarkIcon } from '@heroicons/vue/24/solid';
 import Button from '@/components/ButtonVariant.vue';
 import { setFavourites } from '@/utils/localstorage';
+import type { GalleryStoreT } from '@/utils/types';
 
 defineProps<{
-  gallery: any,
+  gallery: GalleryStoreT['artObjects'],
 }>();
 
 const showModal = ref(false);
@@ -43,46 +45,46 @@ const { name: routeName } = useRoute();
   </div>
 
   <div class="overlay" v-if="showModal">
-      <div class="modal">
-        <button @click="closeModal" class="close-btn">
-          <XMarkIcon />
-        </button>
+    <div class="modal">
+      <button @click="closeModal" class="close-btn">
+        <XMarkIcon />
+      </button>
 
-        <div class="art-container">
-          <img 
-            :src="gallery[selected].webImage.url" 
-            :alt="gallery[selected].principalOrFirstMaker" 
-          />
+      <div class="art-container">
+        <img 
+          :src="gallery[selected].webImage.url" 
+          :alt="gallery[selected].principalOrFirstMaker" 
+        />
 
-          <section>
-            <h4>
-              {{ gallery[selected].principalOrFirstMaker }}
-            </h4>
+        <section>
+          <h4>
+            {{ gallery[selected].principalOrFirstMaker }}
+          </h4>
 
-            <p>
-              {{ gallery[selected].longTitle }}
-            </p>
-          </section>
-        </div>
-
-        <footer class="actions">
-          <Button 
-            type="button" 
-            v-if="routeName !== 'favourites'" 
-            @click="setFavourites(gallery[selected])"
-          >
-            Add To Favourites
-          </Button>
-
-          <RouterLink 
-            :to="{ name: 'details', params: { id: selected } }" 
-            class="action-button"
-          >
-            View details
-          </RouterLink>
-        </footer>
+          <p>
+            {{ gallery[selected].longTitle }}
+          </p>
+        </section>
       </div>
+
+      <footer class="actions">
+        <Button 
+          type="button" 
+          v-if="routeName !== 'favourites'" 
+          @click="setFavourites(gallery[selected])"
+        >
+          Add To Favourites
+        </Button>
+
+        <RouterLink 
+          :to="{ name: 'details', params: { id: selected } }" 
+          class="action-button"
+        >
+          View details
+        </RouterLink>
+      </footer>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -165,10 +167,6 @@ const { name: routeName } = useRoute();
   display: flex;
   align-items: self-end;
   justify-content: center;
-
-  @media (min-width: 1024px) {
-    align-items: center;
-  }
 }
 
 .art-container {
@@ -191,6 +189,10 @@ const { name: routeName } = useRoute();
 }
 
 @media (min-width: 1024px) {
+  .overlay {
+    align-items: center;
+  }
+
   .gallery-container {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
