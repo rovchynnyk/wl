@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { store } from '@/utils/store';
-import { capitalize, onMounted } from 'vue';
+import { capitalize } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
+import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { makeHttpRequest, API_KEY, API_ROOT } from '@/utils/httpUtils';
 import Button from '@/components/ButtonVariant.vue';
 
 const { params: { id } } = useRoute();
 
-const shouldFetch = !store.artObjects[id as string];
-
-const { data, refetch, isPending } = useQuery({ 
-  queryKey: ['art_object'], 
+const { data, isPending } = useQuery({ 
+  queryKey: ['art_object', id], 
   queryFn: () => {
     return makeHttpRequest({ 
       url: `${API_ROOT}/collection/${id}?key=${API_KEY}`,
@@ -20,13 +18,6 @@ const { data, refetch, isPending } = useQuery({
   select: (response) => {
     return response.artObject;
   },
-  enabled: shouldFetch,
-});
-
-onMounted(() => {
-  if (shouldFetch) {
-    refetch();
-  }
 });
 
 const addToFavourites = () => {
@@ -35,7 +26,10 @@ const addToFavourites = () => {
 </script>
 
 <template>
-  <div v-if="isPending">Loading</div>
+  <div v-if="isPending" class="loader-container">
+    <ArrowPathIcon class="loader" />
+  </div>
+
   <div v-else>
     <Button variant="link" to="/" class="button">Back</Button>
 
@@ -124,5 +118,26 @@ img {
 .color-box {
   width: 32px;
   height: 32px;
+}
+
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.loader {
+  width: 60px;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
