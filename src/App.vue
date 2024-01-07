@@ -1,6 +1,17 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { PaintBrushIcon, HeartIcon } from '@heroicons/vue/24/solid'
+import { RouterLink, RouterView } from 'vue-router';
+import { computed } from 'vue';
+import { PaintBrushIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid';
+import { HeartIcon as HeartIconOutlined } from '@heroicons/vue/24/outline';
+import { getFavourites } from './utils/localstorage';
+
+const favourites = computed(() => {
+  const count = Object.keys(
+    getFavourites()
+  ).length;
+
+  return count > 999 ? '999+' : count;
+});
 </script>
 
 <template>
@@ -11,7 +22,11 @@ import { PaintBrushIcon, HeartIcon } from '@heroicons/vue/24/solid'
       </RouterLink>
 
       <RouterLink to="/favourites">
-        <HeartIcon />
+        <span class="favourites" v-if="favourites" :data-count="favourites">
+          <HeartIconOutlined />
+        </span>
+
+        <HeartIconSolid v-else />
       </RouterLink>
     </nav>
   </header>
@@ -42,12 +57,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 36px;
-}
+  width: 44px;
 
-svg {
-  fill: black;
-  stroke: black;
+  &:visited {
+    color: black;
+  }
 }
 
 nav {
@@ -61,5 +75,20 @@ nav {
 
 main {
   padding-top: 80px;
+}
+
+.favourites {
+  display: inline-flex;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    content: attr(data-count);
+    position: absolute;
+    font-weight: bold;
+  }
 }
 </style>

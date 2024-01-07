@@ -35,7 +35,7 @@ const componentType = computed(() => {
   color: #fff;
   border: none;
   font-size: 16px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
@@ -44,6 +44,11 @@ const componentType = computed(() => {
   &:hover,
   &:focus {
     background-color: #4338ca;
+  }
+
+  &:disabled {
+    background-color: #c7d2fe;
+    cursor: not-allowed;
   }
 }
 </style>

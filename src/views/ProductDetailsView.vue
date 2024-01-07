@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { capitalize } from 'vue';
+import { capitalize, computed } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { makeHttpRequest, API_KEY, API_ROOT } from '@/utils/httpUtils';
+import { setFavourites, getFavourite } from '@/utils/localstorage';
 import Button from '@/components/ButtonVariant.vue';
 
 const { params: { id } } = useRoute();
@@ -21,8 +22,12 @@ const { data, isPending } = useQuery({
 });
 
 const addToFavourites = () => {
-
+  setFavourites(data.value);
 };
+
+const stored = computed(() => {
+  return getFavourite(id as string);
+});
 </script>
 
 <template>
@@ -62,6 +67,7 @@ const addToFavourites = () => {
 
         <Button 
           type="button" 
+          :disabled="stored"
           @click="addToFavourites()"
         >
           Add to Favourites
@@ -93,17 +99,11 @@ li {
   }
 }
 
-img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 28px;
+  row-gap: 24px;
 }
 
 .button {
@@ -138,6 +138,12 @@ img {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>

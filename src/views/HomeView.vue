@@ -3,7 +3,8 @@ import { RouterLink } from 'vue-router'
 import { makeHttpRequest, API_ROOT, API_KEY } from '@/utils/httpUtils';
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import Button from '@/components/ButtonVariant.vue';
-import { store, setGalleryData } from '@/utils/store';
+import { store, setGalleryData, resetGalleryData } from '@/utils/store';
+import ArtGallery from '@/components/ArtGallery.vue';
 
 import { ref, computed } from 'vue';
  
@@ -15,22 +16,24 @@ const search = defineModel();
 
 const showModal = ref(false);
 
-const fetch = () => {
-  return makeHttpRequest({ 
+const fetch = async () => {
+  const response = await makeHttpRequest({ 
     url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&p=${page.value}&q=${search.value}&imgonly=true`,
   });
+
+  setGalleryData(response);
 };
 
-const handleSubmit = async () => {
-  setGalleryData(
-    await fetch()
-  );
+const handleSubmit = () => {
+  resetGalleryData();
+
+  fetch();
 }
 
-const loadingMore = async () => {
+const loadingMore = () => {
   page.value++;
 
-  await handleSubmit();
+  fetch();
 };
 
 const openModal = () => {
@@ -57,12 +60,17 @@ const shouldLoadMore = computed(() => {
 <template>
   <div>
     <form @submit.prevent="handleSubmit">
-      <input class="search" type="text" v-model="search" placeholder="Search for a piece of art" />
+      <input 
+        class="search" 
+        type="text" 
+        v-model="search" 
+        placeholder="Search for a piece of art"
+      />
 
       <Button type="submit">Search</Button>
     </form>
 
-    <div class="gallery-container">
+    <!-- <div class="gallery-container">
       <div 
         class="wrapper" 
         v-for="key in Object.keys(store.artObjects)" 
@@ -72,7 +80,9 @@ const shouldLoadMore = computed(() => {
       >
         <img :src="store.artObjects[key].webImage.url" />
       </div>
-    </div>
+    </div> -->
+
+    <ArtGallery :gallery="store.artObjects" />
 
     <div class="more-container">
       <Button 
@@ -146,14 +156,6 @@ const shouldLoadMore = computed(() => {
   column-gap: 16px;
   row-gap: 26px;
   margin-bottom: 24px;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
 .wrapper {
@@ -283,9 +285,21 @@ form {
   .actions {
     flex-direction: row;
   }
+}
 
-  .button {
-    flex: 1;
+@media (min-width: 768px) {
+  .actions {
+    flex-direction: row;
+  }
+  
+  .gallery-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 </style>
