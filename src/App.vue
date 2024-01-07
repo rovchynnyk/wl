@@ -35,6 +35,7 @@ header {
   padding: 0 20px;
   display: flex;
   place-items: center;
+  z-index: 1;
 }
 
 a {

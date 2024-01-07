@@ -3,51 +3,9 @@ import { RouterLink } from 'vue-router'
 import { makeHttpRequest, API_ROOT, API_KEY } from '@/utils/httpUtils';
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import Button from '@/components/ButtonVariant.vue';
+import { store, setGalleryData } from '@/utils/store';
 
 import { ref, computed } from 'vue';
-
-type GalleryT = {
-  count: number,
-  artObjects: {
-    [id: string]: {
-      id: string,
-      principalOrFirstMaker: string,
-      title: string,
-      longTitle: string,
-      webImage: {
-        url: string,
-      }
-    },
-  },
-};
-
-const normalizeGallery = (gallery: GalleryT) => {
-  // const { count, artObjects } = gallery;
-
-  // return {
-  //   count,
-  //   artObjects: artObjects.reduce<
-  //     {[key: string]: GalleryT['artObjects'][number]}
-  //   >((acc, obj) => {
-  //     acc[obj.id] = obj; 
-
-  //     return acc;
-  //   }, {}),
-  // };
-
-  return gallery.reduce<
-    {[key: string]: GalleryT['artObjects'][number]}
-  >((acc, obj) => {
-    acc[obj.id] = obj; 
-
-    return acc;
-  }, {});
-};
-
-const gallery = ref<GalleryT>({ 
-  artObjects: {}, 
-  count: 0,
-});
  
 const page = ref(1);
 
@@ -64,20 +22,15 @@ const fetch = () => {
 };
 
 const handleSubmit = async () => {
-  const { count, artObjects } = await fetch();
-  
-  gallery.value = { 
-    count, 
-    artObjects: normalizeGallery(artObjects),
-  };
+  setGalleryData(
+    await fetch()
+  );
 }
 
 const loadingMore = async () => {
   page.value++;
 
-  gallery.value.artObjects = {
-    ...gallery.value.artObjects, ...normalizeGallery((await fetch()).artObjects),
-  };
+  await handleSubmit();
 };
 
 const openModal = () => {
@@ -95,9 +48,10 @@ const handleArtClick = (id: string) => {
 };
 
 const shouldLoadMore = computed(() => {
-  return Object.keys(gallery.value.artObjects).length < gallery.value.count;
-});
+  const { artObjects, count } = store;
 
+  return Object.keys(artObjects).length < count;
+});
 </script>
 
 <template>
@@ -111,17 +65,21 @@ const shouldLoadMore = computed(() => {
     <div class="gallery-container">
       <div 
         class="wrapper" 
-        v-for="key in Object.keys(gallery.artObjects)" 
+        v-for="key in Object.keys(store.artObjects)" 
         :key="key" 
-        :data-title="gallery.artObjects[key].title" 
-        @click="handleArtClick(gallery.artObjects[key].id)"
+        :data-title="store.artObjects[key].title" 
+        @click="handleArtClick(store.artObjects[key].id)"
       >
-        <img :src="gallery.artObjects[key].webImage.url" />
+        <img :src="store.artObjects[key].webImage.url" />
       </div>
     </div>
 
     <div class="more-container">
-      <button @click="loadingMore" v-if="shouldLoadMore">
+      <Button 
+        type="button" 
+        v-if="shouldLoadMore"
+        @click="loadingMore" 
+      >
         Load More
       </button>
     </div>
@@ -133,21 +91,32 @@ const shouldLoadMore = computed(() => {
         </button>
 
         <div class="art-container">
+
           <img 
-            :src="gallery.artObjects[selected].webImage.url" 
-            :alt="gallery.artObjects[selected].principalOrFirstMaker" 
+            :src="store.artObjects[selected].webImage.url" 
+            :alt="store.artObjects[selected].principalOrFirstMaker" 
           />
 
           <section>
-            <h4>{{ gallery.artObjects[selected].principalOrFirstMaker }}</h4>
+            <h4>
+              {{ store.artObjects[selected].principalOrFirstMaker }}
+            </h4>
 
-            <p>{{ gallery.artObjects[selected].longTitle }}</p>
+            <p>
+              {{ store.artObjects[selected].longTitle }}
+            </p>
           </section>
         </div>
 
         <footer class="actions">
-          <button class="button">Add To Favourites</button>
-          <RouterLink :to="selected" class="button">View details</RouterLink>
+          <Button type="button">Add To Favourites</Button>
+          
+          <RouterLink 
+            :to="selected" 
+            class="button"
+          >
+            View details
+          </RouterLink>
         </footer>
       </div>
     </div>
@@ -272,7 +241,7 @@ form {
   gap: 20px;
 }
 
-.button {
+/* .button {
   border-radius: 8px;
   padding: 12px 24px;
   background-color: #4f46e5;
@@ -286,9 +255,9 @@ form {
 
   &:hover,
   &:focus {
-    background-color: #4338ca; /* hover:bg-indigo-700 */
+    background-color: #4338ca;
   }
-}
+} */
 
 .close-btn {
   margin-left: auto;
