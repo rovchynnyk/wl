@@ -15,7 +15,6 @@
   "dependencies": {
     "@heroicons/vue": "2.1.1",
     "@tanstack/vue-query": "5.17.7",
-    "localforage": "1.10.0",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },

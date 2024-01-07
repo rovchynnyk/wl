@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, RouterLink } from 'vue-router';
 import { capitalize, computed } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
@@ -36,7 +36,7 @@ const stored = computed(() => {
   </div>
 
   <div v-else>
-    <Button variant="link" to="/" class="button">Back</Button>
+    <RouterLink class="action-button button" to="/">Back</RouterLink>
 
     <div class="container">
       <img :src="data.webImage.url" :alt="data.title" />

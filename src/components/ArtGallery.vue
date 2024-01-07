@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/ButtonVariant.vue';
+import { setFavourites } from '@/utils/localstorage';
 
 defineProps<{
   gallery: any,
@@ -65,11 +66,20 @@ const { name: routeName } = useRoute();
         </div>
 
         <footer class="actions">
-          <Button v-if="routeName !== 'favourites'">Add To Favourites</Button>
-
-          <Button variant="link" :url="{ name: 'details', params: { id: selected } }">
-            View details
+          <Button 
+            type="button" 
+            v-if="routeName !== 'favourites'" 
+            @click="setFavourites(gallery[selected])"
+          >
+            Add To Favourites
           </Button>
+
+          <RouterLink 
+            :to="{ name: 'details', params: { id: selected } }" 
+            class="action-button"
+          >
+            View details
+          </RouterLink>
         </footer>
       </div>
     </div>
@@ -135,9 +145,6 @@ const { name: routeName } = useRoute();
   gap: 20px;
 }
 
-
-
-
 .modal {
   background-color: white;
   display: flex;
@@ -176,9 +183,6 @@ const { name: routeName } = useRoute();
     margin-bottom: 12px;
   }
 }
-
-
-
 
 @media (min-width: 768px) {
   .gallery-container {
