@@ -8,7 +8,7 @@ defineProps<{ type: 'button' | 'submit' }>();
   </button>
 </template>
 
-<style>
+<style scoped>
 button {
   border-radius: 8px;
   padding: 12px 24px;

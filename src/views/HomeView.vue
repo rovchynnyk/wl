@@ -1,40 +1,103 @@
 <script setup lang="ts">
-// import TheWelcome from '../components/TheWelcome.vue'
-// import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router'
 import { makeHttpRequest, API_ROOT, API_KEY } from '@/utils/httpUtils';
 import { XMarkIcon } from '@heroicons/vue/24/solid'
-// import { ModalContainer } from '@/components/ModalContainer'
-import ModalContainer from '@/components/ModalContainer.vue'
 import Button from '@/components/ButtonVariant.vue';
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-const data = ref(null)
+type GalleryT = {
+  count: number,
+  artObjects: {
+    [id: string]: {
+      id: string,
+      principalOrFirstMaker: string,
+      title: string,
+      longTitle: string,
+      webImage: {
+        url: string,
+      }
+    },
+  },
+};
 
-const selected = ref(0);
+const normalizeGallery = (gallery: GalleryT) => {
+  // const { count, artObjects } = gallery;
+
+  // return {
+  //   count,
+  //   artObjects: artObjects.reduce<
+  //     {[key: string]: GalleryT['artObjects'][number]}
+  //   >((acc, obj) => {
+  //     acc[obj.id] = obj; 
+
+  //     return acc;
+  //   }, {}),
+  // };
+
+  return gallery.reduce<
+    {[key: string]: GalleryT['artObjects'][number]}
+  >((acc, obj) => {
+    acc[obj.id] = obj; 
+
+    return acc;
+  }, {});
+};
+
+const gallery = ref<GalleryT>({ 
+  artObjects: {}, 
+  count: 0,
+});
+ 
+const page = ref(1);
+
+const selected = ref<string>('');
 
 const search = defineModel();
 
 const showModal = ref(false);
 
-const handleSubmit = async () => {
-  data.value = await makeHttpRequest({ 
-    url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&q=${search.value}&imgonly=true`,
+const fetch = () => {
+  return makeHttpRequest({ 
+    url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&p=${page.value}&q=${search.value}&imgonly=true`,
   });
+};
+
+const handleSubmit = async () => {
+  const { count, artObjects } = await fetch();
+  
+  gallery.value = { 
+    count, 
+    artObjects: normalizeGallery(artObjects),
+  };
 }
 
-const handleModalShow = () => {
-  showModal.value = !showModal.value;
+const loadingMore = async () => {
+  page.value++;
+
+  gallery.value.artObjects = {
+    ...gallery.value.artObjects, ...normalizeGallery((await fetch()).artObjects),
+  };
 };
 
-const fetch = async () => {
-  const res = await makeHttpRequest({ 
-    url: `${API_ROOT}/collection?key=${API_KEY}&ps=12&q=lll&imgonly=true`,
-  });
+const openModal = () => {
+  showModal.value = true;
 };
 
-console.log(data)
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const handleArtClick = (id: string) => {
+  openModal();
+
+  selected.value = id;
+};
+
+const shouldLoadMore = computed(() => {
+  return Object.keys(gallery.value.artObjects).length < gallery.value.count;
+});
+
 </script>
 
 <template>
@@ -45,39 +108,72 @@ console.log(data)
       <Button type="submit">Search</Button>
     </form>
 
-    <div class="container">
-      <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow(el.id)">
-      <!-- <div class="wrapper" v-for="el in data?.artObjects" :key="el.id" :data-title="el.title" @click="handleModalShow(el.id)"> -->
-        <img :src="el.webImage.url" />
+    <div class="gallery-container">
+      <div 
+        class="wrapper" 
+        v-for="key in Object.keys(gallery.artObjects)" 
+        :key="key" 
+        :data-title="gallery.artObjects[key].title" 
+        @click="handleArtClick(gallery.artObjects[key].id)"
+      >
+        <img :src="gallery.artObjects[key].webImage.url" />
       </div>
-
-      <button @click="fetch">Load More</button>
     </div>
 
-    <div class="overlay" v-show="showModal">
-      <div class="modal" @click="handleModalShow">
-        <button @click="handleModalShow" class="close-btn">
+    <div class="more-container">
+      <button @click="loadingMore" v-if="shouldLoadMore">
+        Load More
+      </button>
+    </div>
+
+    <div class="overlay" v-if="showModal">
+      <div class="modal">
+        <button @click="closeModal" class="close-btn">
           <XMarkIcon />
         </button>
 
+        <div class="art-container">
+          <img 
+            :src="gallery.artObjects[selected].webImage.url" 
+            :alt="gallery.artObjects[selected].principalOrFirstMaker" 
+          />
+
+          <section>
+            <h4>{{ gallery.artObjects[selected].principalOrFirstMaker }}</h4>
+
+            <p>{{ gallery.artObjects[selected].longTitle }}</p>
+          </section>
+        </div>
+
         <footer class="actions">
           <button class="button">Add To Favourites</button>
-          <RouterLink to="/" class="button">View details</RouterLink>
+          <RouterLink :to="selected" class="button">View details</RouterLink>
         </footer>
       </div>
     </div>
-    <!-- <ModalContainer v-show="showModal">
-      hello modal
-    </ModalContainer> -->
+    <!-- todo implement modal container -->
   </div>
 </template>
 
 <style scoped>
-.container {
+.art-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 20px;
+  margin-bottom: 24px;
+
+  h4 {
+    font-weight: bolder;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+}
+.gallery-container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 16px;
   row-gap: 26px;
+  margin-bottom: 24px;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -163,6 +259,10 @@ form {
   display: flex;
   align-items: self-end;
   justify-content: center;
+
+  @media (min-width: 1024px) {
+    align-items: center;
+  }
 }
 
 .actions {
@@ -191,16 +291,20 @@ form {
 }
 
 .close-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  margin-left: auto;
   border: none;
   background-color: #fff;
-  margin-bottom: 20px;
+  color: #000;
+  cursor: pointer;
 
   & > svg {
     width: 24px;
   }
+}
+
+.more-container {
+  display: flex;
+  justify-content: center;
 }
 
 @media (min-width: 640px) {
