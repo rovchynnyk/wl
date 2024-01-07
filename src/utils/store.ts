@@ -1,9 +1,9 @@
 import { reactive } from 'vue';
 
 type ArtObjectT = {
-  id: string,
   title: string,
   longTitle: string,
+  objectNumber: string,
   principalOrFirstMaker: string,
   webImage: {
     url: string,
@@ -17,7 +17,7 @@ type GalleryStoreT = {
 
 const normalizeGallery = (gallery: ArtObjectT[]) => {
   return gallery.reduce<GalleryStoreT['artObjects']>((acc, obj) => {
-    acc[obj.id] = obj; 
+    acc[obj.objectNumber] = obj; 
 
     return acc;
   }, {});

@@ -1,15 +1,29 @@
 <script setup lang="ts">
-defineProps<{ type: 'button' | 'submit' }>();
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
+
+const { variant } = defineProps<{ 
+  variant: 'link' | 'button' | 'submit'
+  url?: string,
+}>();
+
+const componentType = computed(() => {
+  return variant === 'link' ? RouterLink : 'button';
+});
 </script>
 
 <template>
-  <button :type="type">
+  <component 
+    :is="componentType" 
+    :to="variant === 'link' ? url : undefined"
+    class="button"
+  >
     <slot></slot>
-  </button>
+  </component>
 </template>
 
 <style scoped>
-button {
+.button {
   border-radius: 8px;
   padding: 12px 24px;
   background-color: #4f46e5;

@@ -68,7 +68,7 @@ const shouldLoadMore = computed(() => {
         v-for="key in Object.keys(store.artObjects)" 
         :key="key" 
         :data-title="store.artObjects[key].title" 
-        @click="handleArtClick(store.artObjects[key].id)"
+        @click="handleArtClick(store.artObjects[key].objectNumber)"
       >
         <img :src="store.artObjects[key].webImage.url" />
       </div>
@@ -76,7 +76,6 @@ const shouldLoadMore = computed(() => {
 
     <div class="more-container">
       <Button 
-        type="button" 
         v-if="shouldLoadMore"
         @click="loadingMore" 
       >
@@ -91,7 +90,6 @@ const shouldLoadMore = computed(() => {
         </button>
 
         <div class="art-container">
-
           <img 
             :src="store.artObjects[selected].webImage.url" 
             :alt="store.artObjects[selected].principalOrFirstMaker" 
@@ -109,14 +107,18 @@ const shouldLoadMore = computed(() => {
         </div>
 
         <footer class="actions">
-          <Button type="button">Add To Favourites</Button>
-          
-          <RouterLink 
+          <Button>Add To Favourites</Button>
+
+          <!-- <RouterLink 
             :to="selected" 
             class="button"
           >
             View details
-          </RouterLink>
+          </RouterLink> -->
+          <Button variant="link" :url="selected">View details</Button>
+          <!-- <RouterLink :to="selected" custom v-slot="{navigate}">
+            <Button @click="navigate" role="link">View details</Button>
+          </RouterLink> -->
         </footer>
       </div>
     </div>
