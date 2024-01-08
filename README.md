@@ -1,27 +1,36 @@
-# worklife
+# Worklife
 
-This template should help get you started developing with Vue 3 in Vite.
+This project is a single-page application (SPA) developed as part of a Frontend Technical Assignment. It uses Vue 3 and Vue Query from TanStack with TypeScript. The application utilizes the Rijksmuseum open API to display a listing of artworks, a detailed view for each artwork, and incorporates a "Favourites" feature.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- Pagination: Navigate through large lists with ease using load more button.
+- Search: Quickly find artworks with the search functionality.
+- Artwork Details: Clicking on an artwork opens a detailed view with more information.
+- Responsive Design: The application is fully responsive, supporting desktop, tablet, and mobile views.
+- Performance: The application is built with performance in mind, and uses Vue Query to cache data and minimize network requests.
+- Favourites Feature: Users can add artworks to their favourites (stored in localStorage).
 
-## Type Support for `.vue` Imports in TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Built With
+- [Vue 3](https://vuejs.org/) - The Progressive JavaScript Framework.
+- [Vue Query](https://tanstack.com/query/v5) - A powerful data synchronization library for Vue.
+- [TypeScript](https://www.typescriptlang.org/) - An open-source language which builds on JavaScript by adding static type definitions.
+- [Vite](https://vitejs.dev/) - A no-bundle, lightning-fast web development server.
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Getting Started
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Prerequisites
 
-## Customize configuration
+Ensure you have Node.js and npm installed.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Clone the Repository
 
-## Project Setup
+```sh
+git clone https://github.com/rovchynnyk/wl.git
+
+cd wl
+```
 
 ```sh
 npm install
