@@ -109,6 +109,7 @@ const handleArtSave = (artObject: ArtObjectT) => {
   width: 100%;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 
   &:hover,
   &:focus {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { capitalize, computed } from 'vue';
+import { capitalize, ref } from 'vue';
 import { useQuery } from "@tanstack/vue-query";
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { makeHttpRequest, API_KEY, API_ROOT } from '@/utils/httpUtils';
@@ -10,7 +10,9 @@ import Button from '@/components/ButtonVariant.vue';
 
 const { params: { id } } = useRoute();
 const router = useRouter();
-const { saved, saveFavourites } = useFavourites();
+const { saved, saveFavourites, removeFavourite } = useFavourites();
+
+const stored = ref(getFavourite(id as string));
 
 const { data, isPending } = useQuery({ 
   queryKey: ['art_object', id], 
@@ -28,9 +30,10 @@ const addToFavourites = () => {
   saveFavourites(data.value);
 };
 
-const stored = computed(() => {
-  return getFavourite(id as string);
-});
+const handleRemoveFavourites = (id: string) => {
+  removeFavourite(id as string);
+  stored.value = false;
+}
 
 const goBack = () => {
   router.go(-1);
@@ -81,10 +84,9 @@ const goBack = () => {
 
         <Button 
           type="button" 
-          :disabled="saved || stored"
-          @click="addToFavourites()"
+          @click="(stored || saved) ? handleRemoveFavourites(id as string) : addToFavourites()"
         >
-          Add to Favourites
+          {{ (stored || saved) ? 'Remove from Favourites' : 'Add to Favourites' }}
         </Button>
       </section>
     </div>

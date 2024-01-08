@@ -1,7 +1,11 @@
 import { computed, reactive, ref } from 'vue';
 import { useToast } from "vue-toastification";
 
-import { setFavourites, getFavouritesCount } from '../localstorage';
+
+// todo might be better to create a class
+import { 
+  setFavourite, getFavouritesCount, deleteFavourite,
+} from '../localstorage';
 
 import type { ArtObjectT } from '@/utils/types';
 
@@ -15,7 +19,7 @@ export const useFavourites = () => {
 
   const saveFavourites = (artObject: ArtObjectT) => {
     try {
-      setFavourites(artObject);
+      setFavourite(artObject);
 
       saved.value = true;
       state.count = getFavouritesCount();
@@ -26,6 +30,15 @@ export const useFavourites = () => {
     }
   };
 
+  const removeFavourite = (id: string) => {
+    deleteFavourite(id);
+
+    saved.value = false;
+    state.count = getFavouritesCount();
+
+    toast.success('Art object successfully removed');
+  }
+
   const count = computed(() => {
     return state.count;
   });
@@ -34,5 +47,6 @@ export const useFavourites = () => {
     saved,
     count,
     saveFavourites,
+    removeFavourite,
   }
 };

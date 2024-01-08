@@ -34,7 +34,6 @@ defineProps<{
   flex-direction: column;
   padding: 20px;
   width: 600px;
-  z-index: 100;
 }
 
 .overlay {
