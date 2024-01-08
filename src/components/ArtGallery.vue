@@ -18,7 +18,7 @@ const selected = ref<string>('');
 
 const stored = ref(false);
 
-const { saveFavourites, removeFavourite, saved } = useFavourites();
+const { saveFavourites, removeFavourite } = useFavourites();
 
 const openModal = () => {
   showModal.value = true;

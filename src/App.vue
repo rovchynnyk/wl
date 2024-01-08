@@ -5,7 +5,6 @@ import { HeartIcon as HeartIconOutlined } from '@heroicons/vue/24/outline';
 import { useFavourites } from './utils/hooks/useFavourites';
 
 const { count } = useFavourites();
-
 </script>
 
 <template>
