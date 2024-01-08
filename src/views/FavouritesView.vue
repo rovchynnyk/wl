@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getFavourites, getFavouritesCount} from '@/utils/localstorage';
+import { favouritesStorage } from '@/utils/favouritesStorage';
 import ArtGallery from '@/components/ArtGallery.vue';
 </script>
 
@@ -7,9 +7,9 @@ import ArtGallery from '@/components/ArtGallery.vue';
   <div>
     <h1>Favourites Page</h1>
 
-    <div v-if="!getFavouritesCount()">No items here</div>
+    <div v-if="!favouritesStorage.getFavouritesCount()">No items here</div>
 
-    <ArtGallery :gallery="getFavourites()" />
+    <ArtGallery :gallery="favouritesStorage.getFavourites()" />
   </div>
 </template>
 
@@ -19,3 +19,4 @@ h1 {
   margin-bottom: 20px;
 }
 </style>
+@/utils/favouritesStorage

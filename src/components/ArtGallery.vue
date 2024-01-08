@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import Button from '@/components/ButtonVariant.vue';
 import ModalView from './ModalView.vue';
 import { useFavourites } from '@/utils/hooks/useFavourites';
-import { getFavourite } from '@/utils/localstorage';
+import { favouritesStorage } from '@/utils/favouritesStorage';
 
 import type { ArtObjectT, GalleryStoreT } from '@/utils/types';
 
@@ -31,7 +31,9 @@ const closeModal = () => {
 
 const handleArtClick = (id: string) => {
   selected.value = id;
-  stored.value = Boolean(getFavourite(id));
+  stored.value = Boolean(
+    favouritesStorage.getFavourite(id)
+  );
   
   openModal();
 };
@@ -179,4 +181,4 @@ const handleArtSave = (artObject: ArtObjectT) => {
   }
 }
 </style>
-@/utils/hooks/useFavourites
+@/utils/hooks/useFavourites@/utils/favouritesStorage
