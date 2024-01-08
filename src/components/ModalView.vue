@@ -69,5 +69,9 @@ defineProps<{
   .overlay {
     align-items: center;
   }
+
+  .actions {
+    flex-direction: row;
+  }
 }
 </style>

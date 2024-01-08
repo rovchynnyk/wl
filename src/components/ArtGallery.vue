@@ -63,7 +63,7 @@ const { name: routeName } = useRoute();
       </section>
     </div>
 
-    <template #footer?>
+    <template #footer>
       <Button 
         type="button" 
         v-if="routeName !== 'favourites'" 

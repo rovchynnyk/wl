@@ -21,6 +21,8 @@ const fetch = async () => {
 const handleSubmit = () => {
   resetGalleryData();
 
+  page.value = 1;
+
   fetch();
 }
 
