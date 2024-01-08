@@ -13,14 +13,18 @@ export const useFavourites = () => {
   const saved = ref(false);
   const toast = useToast();
 
+  const updateFavourites = (message: string, store: boolean) => {
+    saved.value = store;
+    state.count = favouritesStorage.getFavouritesCount();
+
+    toast.success(message);
+  };
+
   const saveFavourites = (artObject: ArtObjectT) => {
     try {
       favouritesStorage.setFavourite(artObject);
 
-      saved.value = true;
-      state.count = favouritesStorage.getFavouritesCount();
-
-      toast.success('Art object successfully saved');
+      updateFavourites('Art object successfully saved', true);
     } catch (err) {
       toast.error(`Error occurred: ${err}`);
     }
@@ -29,10 +33,7 @@ export const useFavourites = () => {
   const removeFavourite = (id: string) => {
     favouritesStorage.deleteFavourite(id);
 
-    saved.value = false;
-    state.count = favouritesStorage.getFavouritesCount();
-
-    toast.success('Art object successfully removed');
+    updateFavourites('Art object successfully removed', false);
   }
 
   const count = computed(() => {
