@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
-import { computed } from 'vue';
 import { PaintBrushIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid';
 import { HeartIcon as HeartIconOutlined } from '@heroicons/vue/24/outline';
-import { getFavourites } from './utils/localstorage';
+import { useFavourites } from './utils/hooks/useFavourites';
 
-const favourites = computed(() => {
-  const count = Object.keys(
-    getFavourites()
-  ).length;
+const { count } = useFavourites();
 
-  return count > 999 ? '999+' : count;
-});
 </script>
 
 <template>
@@ -22,7 +16,7 @@ const favourites = computed(() => {
       </RouterLink>
 
       <RouterLink to="/favourites">
-        <span class="favourites" v-if="favourites" :data-count="favourites">
+        <span class="favourites" v-if="count" :data-count="count">
           <HeartIconOutlined />
         </span>
 
@@ -92,3 +86,4 @@ main {
   }
 }
 </style>
+./utils/hooks/useFavourites

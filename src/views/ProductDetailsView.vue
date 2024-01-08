@@ -5,12 +5,12 @@ import { useQuery } from "@tanstack/vue-query";
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { makeHttpRequest, API_KEY, API_ROOT } from '@/utils/httpUtils';
 import { getFavourite } from '@/utils/localstorage';
-import { useSaveFavourites } from '@/utils/hooks/useSaveFavourites';
+import { useFavourites } from '@/utils/hooks/useFavourites';
 import Button from '@/components/ButtonVariant.vue';
 
 const { params: { id } } = useRoute();
 const router = useRouter();
-const { saved, saveFavourites } = useSaveFavourites();
+const { saved, saveFavourites } = useFavourites();
 
 const { data, isPending } = useQuery({ 
   queryKey: ['art_object', id], 
@@ -161,3 +161,4 @@ li {
   }
 }
 </style>
+@/utils/hooks/useFavourites

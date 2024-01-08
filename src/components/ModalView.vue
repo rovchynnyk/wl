@@ -8,8 +8,12 @@ defineProps<{
 </script>
 
 <template>
-  <div class="overlay" v-if="show">
-    <div class="modal">
+  <div 
+    class="overlay" 
+    v-if="show" 
+    @click="onModalClose"
+  >
+    <div class="modal" @click.stop>
       <button @click="onModalClose" class="close-btn">
         <XMarkIcon />
       </button>
@@ -30,6 +34,7 @@ defineProps<{
   flex-direction: column;
   padding: 20px;
   width: 600px;
+  z-index: 100;
 }
 
 .overlay {
@@ -44,6 +49,7 @@ defineProps<{
   display: flex;
   align-items: self-end;
   justify-content: center;
+  z-index: 1;
 }
 
 .close-btn {
