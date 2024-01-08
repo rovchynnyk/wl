@@ -2,10 +2,10 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/ButtonVariant.vue';
-import { setFavourites } from '@/utils/localstorage';
 import ModalView from './ModalView.vue';
+import { useSaveFavourites } from '@/utils/hooks/useSaveFavourites';
 
-import type { GalleryStoreT } from '@/utils/types';
+import type { ArtObjectT, GalleryStoreT } from '@/utils/types';
 
 defineProps<{
   gallery: GalleryStoreT['artObjects'],
@@ -14,6 +14,8 @@ defineProps<{
 const showModal = ref(false);
 
 const selected = ref<string>('');
+
+const { saveFavourites } = useSaveFavourites();
 
 const openModal = () => {
   showModal.value = true;
@@ -30,6 +32,11 @@ const handleArtClick = (id: string) => {
 };
 
 const { name: routeName } = useRoute();
+
+const handleArtSave = (artObject: ArtObjectT) => {
+  saveFavourites(artObject);
+  closeModal();
+}
 </script>
 
 <template>
@@ -67,7 +74,7 @@ const { name: routeName } = useRoute();
       <Button 
         type="button" 
         v-if="routeName !== 'favourites'" 
-        @click="setFavourites(gallery[selected])"
+        @click="handleArtSave(gallery[selected])"
       >
         Add To Favourites
       </Button>
