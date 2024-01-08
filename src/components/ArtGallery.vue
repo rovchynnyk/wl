@@ -18,7 +18,7 @@ const selected = ref<string>('');
 
 const stored = ref(false);
 
-const { saveFavourites } = useFavourites();
+const { saveFavourites, removeFavourite, saved } = useFavourites();
 
 const openModal = () => {
   showModal.value = true;
@@ -35,6 +35,12 @@ const handleArtClick = (id: string) => {
   
   openModal();
 };
+
+const handleRemoveFavourites = () => {
+  removeFavourite(selected.value);
+  closeModal();
+  stored.value = false;
+}
 
 const { name: routeName } = useRoute();
 
@@ -78,11 +84,10 @@ const handleArtSave = (artObject: ArtObjectT) => {
     <template #footer>
       <Button 
         type="button" 
-        :disabled="stored"
         v-if="routeName !== 'favourites'" 
-        @click="handleArtSave(gallery[selected])"
+        @click="stored ? handleRemoveFavourites() : handleArtSave(gallery[selected])"
       >
-        Add To Favourites
+        {{ stored ? 'Remove from Favourites' : 'Add to Favourites' }}
       </Button>
 
       <RouterLink 
