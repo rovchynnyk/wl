@@ -51,10 +51,7 @@ a {
   align-items: center;
   justify-content: space-between;
   width: 44px;
-
-  &:visited {
-    color: black;
-  }
+  color: black;
 }
 
 nav {

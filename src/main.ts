@@ -13,6 +13,8 @@ app.use(router)
 
 app.use(VueQueryPlugin);
 
-app.use(Toast);
+app.use(Toast, {
+  timeout: 2000,
+});
 
 app.mount('#app')

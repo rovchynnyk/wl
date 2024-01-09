@@ -33,9 +33,9 @@ const loadingMore = () => {
 };
 
 const shouldLoadMore = computed(() => {
-  const { artObjects, count } = store;
+  const { artObjectsKeys, count } = store;
 
-  return Object.keys(artObjects).length < count;
+  return artObjectsKeys.length < count;
 });
 </script>
 
@@ -52,7 +52,7 @@ const shouldLoadMore = computed(() => {
       <Button type="submit">Search</Button>
     </form>
 
-    <ArtGallery :gallery="store.artObjects" />
+    <ArtGallery :gallery="store" />
 
     <div class="more-container">
       <Button 

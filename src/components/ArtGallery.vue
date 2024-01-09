@@ -9,7 +9,7 @@ import { favouritesStorage } from '@/utils/favouritesStorage';
 import type { ArtObjectT, GalleryStoreT } from '@/utils/types';
 
 defineProps<{
-  gallery: GalleryStoreT['artObjects'],
+  gallery: GalleryStoreT,
 }>();
 
 const showModal = ref(false);
@@ -56,29 +56,29 @@ const handleArtSave = (artObject: ArtObjectT) => {
   <div class="gallery-container">
     <div 
       class="wrapper" 
-      v-for="key in Object.keys(gallery)" 
+      v-for="key in gallery.artObjectsKeys" 
       :key="key" 
-      :data-title="gallery[key].title" 
-      @click="handleArtClick(gallery[key].objectNumber)"
+      :data-title="gallery.artObjects[key].title" 
+      @click="handleArtClick(key)"
     >
-      <img :src="gallery[key].webImage.url" />
+      <img :src="gallery.artObjects[key].webImage.url" />
     </div>
   </div>
 
   <ModalView :show="showModal" @modalClose="closeModal">
     <div class="art-container">
       <img 
-        :src="gallery[selected].webImage.url" 
-        :alt="gallery[selected].principalOrFirstMaker" 
+        :src="gallery.artObjects[selected].webImage.url" 
+        :alt="gallery.artObjects[selected].principalOrFirstMaker" 
       />
 
       <section>
         <h4>
-          {{ gallery[selected].principalOrFirstMaker }}
+          {{ gallery.artObjects[selected].principalOrFirstMaker }}
         </h4>
 
         <p>
-          {{ gallery[selected].longTitle }}
+          {{ gallery.artObjects[selected].longTitle }}
         </p>
       </section>
     </div>
@@ -87,7 +87,7 @@ const handleArtSave = (artObject: ArtObjectT) => {
       <Button 
         type="button" 
         v-if="routeName !== 'favourites'" 
-        @click="stored ? handleRemoveFavourites() : handleArtSave(gallery[selected])"
+        @click="stored ? handleRemoveFavourites() : handleArtSave(gallery.artObjects[selected])"
       >
         {{ stored ? 'Remove from Favourites' : 'Add to Favourites' }}
       </Button>

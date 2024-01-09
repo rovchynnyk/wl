@@ -9,6 +9,7 @@ export type ArtObjectT = {
 }
 
 export type GalleryStoreT = {
-  count: number;
-  artObjects: { [key: string]: ArtObjectT };
+  count: number,
+  artObjects: { [key: string]: ArtObjectT },
+  artObjectsKeys: string[],
 }
