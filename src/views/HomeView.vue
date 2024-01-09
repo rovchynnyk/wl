@@ -40,7 +40,7 @@ const fetch = async () => {
 const handleSubmit = () => {
   resetGalleryData();
 
-  loadingMoreSteps.value = 1;
+  loadingMoreSteps.value = 2;
 
   fetch();
 }
