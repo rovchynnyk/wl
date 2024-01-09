@@ -47,7 +47,7 @@ const goBack = () => {
     <ArrowPathIcon class="loader" />
   </div>
 
-  <div v-else class="product-container">
+  <div v-else>
     <Button 
       type="button" 
       class="button"
@@ -118,9 +118,6 @@ li {
   }
 }
 
-.product-container {
-  height: 100%;
-}
 .container {
   display: grid;
   grid-template-columns: 1fr;

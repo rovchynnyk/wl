@@ -81,5 +81,11 @@ main {
     font-weight: bold;
   }
 }
+
+@media (min-width: 1024px) {
+  main {
+    padding-top: 80px;
+  }
+}
 </style>
 ./utils/hooks/useFavourites
