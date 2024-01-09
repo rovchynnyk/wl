@@ -64,7 +64,7 @@ nav {
 }
 
 main {
-  padding-top: 80px;
+  padding-top: 64px;
 }
 
 .favourites {

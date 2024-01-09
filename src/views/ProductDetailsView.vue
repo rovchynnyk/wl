@@ -47,7 +47,7 @@ const goBack = () => {
     <ArrowPathIcon class="loader" />
   </div>
 
-  <div v-else>
+  <div v-else class="product-container">
     <Button 
       type="button" 
       class="button"
@@ -111,12 +111,16 @@ li {
   list-style-type: none;
   border-radius: 12px;
   padding: 4px 16px;
+  margin-bottom: 8px;
 
   &:not(:last-of-type) {
     margin-right: 8px;
   }
 }
 
+.product-container {
+  height: 100%;
+}
 .container {
   display: grid;
   grid-template-columns: 1fr;
